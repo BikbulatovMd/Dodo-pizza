@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Detail používateľa')}"></head>
+<body class="bg-dodo-light min-h-screen flex flex-col">
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<main class="flex-grow">
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        <a href="/admin/users" class="text-dodo-orange hover:underline mb-4 inline-block">&larr; Späť na zoznam</a>
+
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-dodo-dark to-dodo-blue p-8 text-center">
+                <div class="w-24 h-24 mx-auto rounded-full bg-dodo-orange flex items-center justify-center text-white text-3xl font-bold overflow-hidden">
+                    <img th:if="${user.profileImageUrl}" th:src="${user.profileImageUrl}" class="w-full h-full object-cover">
+                    <span th:unless="${user.profileImageUrl}" th:text="${user.firstName.charAt(0)}">U</span>
+                </div>
+                <h1 th:text="${user.fullName}" class="text-2xl font-bold text-white mt-4">Meno</h1>
+                <p th:text="${user.email}" class="text-gray-300">email</p>
+                <span th:if="${user.enabled}" class="inline-block mt-2 px-3 py-1 bg-green-500 text-white rounded-full text-sm">Aktívny</span>
+                <span th:unless="${user.enabled}" class="inline-block mt-2 px-3 py-1 bg-red-500 text-white rounded-full text-sm">Blokovaný</span>
+            </div>
+
+            <div class="p-6">
+                <!-- Details -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <span class="text-sm text-gray-500">Telefón</span>
+                        <p th:text="${user.phone ?: 'Neuvedený'}" class="font-medium">Tel</p>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500">Registrácia</span>
+                        <p th:text="${#temporals.format(user.createdAt, 'dd.MM.yyyy')}" class="font-medium">Dátum</p>
+                    </div>
+                    <div class="col-span-2">
+                        <span class="text-sm text-gray-500">Adresa</span>
+                        <p th:text="${user.deliveryAddress ?: 'Neuvedená'}" class="font-medium">Adresa</p>
+                    </div>
+                </div>
+
+                <!-- Roles -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold text-dodo-dark mb-3">Roly</h3>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span th:each="role : ${user.roles}"
+                              class="flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
+                            <span th:text="${role.displayNameSk}">Role</span>
+                            <form th:action="@{/admin/users/{id}/role(id=${user.id})}" method="post" class="inline ml-2">
+                                <input type="hidden" name="roleName" th:value="${role.name}">
+                                <input type="hidden" name="action" value="remove">
+                                <button type="submit" class="text-blue-600 hover:text-blue-800">&times;</button>
+                            </form>
+                        </span>
+                    </div>
+
+                    <form th:action="@{/admin/users/{id}/role(id=${user.id})}" method="post" class="flex gap-2">
+                        <select name="roleName" class="flex-grow px-4 py-2 border border-gray-300 rounded-lg">
+                            <option value="ROLE_CUSTOMER">Zákazník</option>
+                            <option value="ROLE_COOK">Kuchár</option>
+                            <option value="ROLE_COURIER">Kuriér</option>
+                            <option value="ROLE_ADMIN">Administrátor</option>
+                        </select>
+                        <input type="hidden" name="action" value="add">
+                        <button type="submit" class="bg-dodo-orange text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition">
+                            Pridať rolu
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-4">
+                    <form th:action="@{/admin/users/{id}/toggle(id=${user.id})}" method="post" class="flex-1">
+                        <button type="submit"
+                                th:text="${user.enabled} ? 'Blokovať používateľa' : 'Aktivovať používateľa'"
+                                th:class="${user.enabled} ? 'w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition' : 'w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition'">
+                            Toggle
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>
+

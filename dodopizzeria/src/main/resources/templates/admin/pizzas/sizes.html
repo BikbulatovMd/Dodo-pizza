@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Veľkosti pizze')}"></head>
+<body class="bg-dodo-light min-h-screen flex flex-col">
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<main class="flex-grow">
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        <a href="/admin/pizzas" class="text-dodo-orange hover:underline mb-4 inline-block">&larr; Späť na zoznam</a>
+        <h1 class="text-3xl font-bold text-dodo-dark mb-2">
+            📏 Veľkosti: <span th:text="${pizza.nameSk}">Pizza</span>
+        </h1>
+        <p class="text-gray-600 mb-8">Nastavte ceny a priemery pre jednotlivé veľkosti.</p>
+
+        <!-- Current Sizes -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <h2 class="text-lg font-bold text-dodo-dark mb-4">Aktuálne veľkosti</h2>
+
+            <div th:if="${#lists.isEmpty(sizes)}" class="text-gray-500 text-center py-4">
+                Zatiaľ neboli pridané žiadne veľkosti
+            </div>
+
+            <div th:unless="${#lists.isEmpty(sizes)}" class="space-y-3">
+                <div th:each="size : ${sizes}" class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div>
+                        <span th:text="${size.sizeCode}" class="text-2xl font-bold text-dodo-dark">M</span>
+                        <span class="text-gray-500 ml-2">
+                            (<span th:text="${size.diameterCm}">30</span> cm)
+                        </span>
+                        <span th:unless="${size.available}" class="ml-2 px-2 py-1 bg-red-100 text-red-800 rounded text-xs">Nedostupná</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-xl font-bold text-dodo-orange">
+                            <span th:text="${#numbers.formatDecimal(size.priceEur, 1, 2)}">0.00</span> €
+                        </span>
+                        <form th:action="@{/admin/pizzas/sizes/{sizeId}/delete(sizeId=${size.id})}" method="post">
+                            <input type="hidden" name="pizzaId" th:value="${pizza.id}">
+                            <button type="submit" class="text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add New Size -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <h2 class="text-lg font-bold text-dodo-dark mb-4">Pridať veľkosť</h2>
+
+            <form th:action="@{/admin/pizzas/{id}/sizes(id=${pizza.id})}" th:object="${newSize}" method="post" class="space-y-4">
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label for="sizeCode" class="block text-sm font-medium text-gray-700 mb-1">Veľkosť</label>
+                        <select id="sizeCode" th:field="*{sizeCode}"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange">
+                            <option value="S">S (Malá)</option>
+                            <option value="M" selected>M (Stredná)</option>
+                            <option value="L">L (Veľká)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="diameterCm" class="block text-sm font-medium text-gray-700 mb-1">Priemer (cm)</label>
+                        <input type="number" id="diameterCm" th:field="*{diameterCm}" min="20" max="60"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange">
+                    </div>
+                    <div>
+                        <label for="priceEur" class="block text-sm font-medium text-gray-700 mb-1">Cena (€)</label>
+                        <input type="number" id="priceEur" th:field="*{priceEur}" step="0.01" min="0"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange">
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="checkbox" id="available" th:field="*{available}" class="w-4 h-4 text-dodo-orange rounded" checked>
+                    <label for="available" class="text-sm font-medium text-gray-700">Dostupná</label>
+                </div>
+
+                <button type="submit"
+                        class="w-full bg-dodo-orange text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+                    + Pridať veľkosť
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>
+

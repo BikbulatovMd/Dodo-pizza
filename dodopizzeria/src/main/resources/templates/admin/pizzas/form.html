@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head
+    th:replace="~{fragments/header :: head(${pizza.id != null} ? 'Upraviť pizzu' : 'Nová pizza')}"
+  ></head>
+  <body class="bg-dodo-light min-h-screen flex flex-col">
+    <nav th:replace="~{fragments/header :: navbar}"></nav>
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <main class="flex-grow">
+      <div class="max-w-2xl mx-auto px-4 py-8">
+        <a href="/admin/pizzas" class="text-dodo-orange hover:underline mb-4 inline-block"
+          >&larr; Späť na zoznam</a
+        >
+        <h1
+          class="text-3xl font-bold text-dodo-dark mb-8"
+          th:text="${pizza.id != null} ? '✏️ Upraviť pizzu' : '➕ Nová pizza'"
+        >
+          Form
+        </h1>
+
+        <div
+          th:if="${error}"
+          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6"
+        >
+          <span th:text="${error}"></span>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+          <form
+            th:action="${pizza.id != null} ? @{/admin/pizzas/{id}/edit(id=${pizza.id})} : @{/admin/pizzas/new}"
+            th:object="${pizza}"
+            method="post"
+            enctype="multipart/form-data"
+            class="space-y-4"
+          >
+            <div>
+              <label for="nameSk" class="block text-sm font-medium text-gray-700 mb-1"
+                >Názov *</label
+              >
+              <input
+                type="text"
+                id="nameSk"
+                th:field="*{nameSk}"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange"
+                th:classappend="${#fields.hasErrors('nameSk')} ? 'border-red-500' : ''"
+              />
+              <p
+                th:if="${#fields.hasErrors('nameSk')}"
+                th:errors="*{nameSk}"
+                class="text-red-500 text-sm mt-1"
+              ></p>
+            </div>
+
+            <div>
+              <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug *</label>
+              <input
+                type="text"
+                id="slug"
+                th:field="*{slug}"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange"
+                th:classappend="${#fields.hasErrors('slug')} ? 'border-red-500' : ''"
+              />
+              <p
+                th:if="${#fields.hasErrors('slug')}"
+                th:errors="*{slug}"
+                class="text-red-500 text-sm mt-1"
+              ></p>
+              <p class="text-gray-500 text-xs mt-1">Len malé písmená, čísla a pomlčky</p>
+            </div>
+
+            <div>
+              <label for="descriptionSk" class="block text-sm font-medium text-gray-700 mb-1"
+                >Popis</label
+              >
+              <textarea
+                id="descriptionSk"
+                th:field="*{descriptionSk}"
+                rows="3"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange"
+              ></textarea>
+            </div>
+
+            <div>
+              <label for="image" class="block text-sm font-medium text-gray-700 mb-1"
+                >Obrázok</label
+              >
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-dodo-orange file:text-white hover:file:bg-orange-600"
+              />
+              <input type="hidden" th:field="*{imageUrl}" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Ingrediencie</label>
+              <div
+                class="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto border border-gray-200 rounded-lg p-3"
+              >
+                <label th:each="ing : ${ingredients}" class="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    name="ingredientIds"
+                    th:value="${ing.id}"
+                    th:checked="${pizza.ingredientIds?.contains(ing.id)}"
+                    class="w-4 h-4 text-dodo-orange rounded"
+                  />
+                  <span th:text="${ing.nameSk}" class="text-sm">Ingrediencia</span>
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Tagy</label>
+              <div class="flex flex-wrap gap-2">
+                <label
+                  th:each="t : ${tags}"
+                  class="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-full"
+                >
+                  <input
+                    type="checkbox"
+                    name="tagIds"
+                    th:value="${t.id}"
+                    th:checked="${pizza.tagIds?.contains(t.id)}"
+                    class="w-4 h-4 text-dodo-orange rounded"
+                  />
+                  <span th:text="${t.nameSk}" class="text-sm">Tag</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="active"
+                th:field="*{active}"
+                class="w-4 h-4 text-dodo-orange rounded"
+              />
+              <label for="active" class="text-sm font-medium text-gray-700"
+                >Aktívna (viditeľná v menu)</label
+              >
+            </div>
+
+            <div class="flex gap-4 pt-4">
+              <a
+                href="/admin/pizzas"
+                class="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition text-center"
+              >
+                Zrušiť
+              </a>
+              <button
+                type="submit"
+                class="flex-1 bg-dodo-orange text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
+              >
+                Uložiť
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>
