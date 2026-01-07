@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Správa tagov')}"></head>
+<body class="bg-dodo-light min-h-screen flex flex-col">
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<main class="flex-grow">
+    <div class="max-w-3xl mx-auto px-4 py-8">
+        <a href="/admin" class="text-dodo-orange hover:underline mb-4 inline-block">&larr; Admin Panel</a>
+        <h1 class="text-3xl font-bold text-dodo-dark mb-8">🏷️ Správa tagov</h1>
+
+        <!-- Add New Tag -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+            <h2 class="text-lg font-bold text-dodo-dark mb-4">Pridať nový tag</h2>
+            <form th:action="@{/admin/tags}" method="post" class="flex gap-4">
+                <input type="text" name="nameSk" placeholder="Názov tagu" required
+                       class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange">
+                <input type="text" name="slug" placeholder="slug" required pattern="[a-z0-9-]+"
+                       class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange">
+                <button type="submit"
+                        class="bg-dodo-orange text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-600 transition">
+                    Pridať
+                </button>
+            </form>
+        </div>
+
+        <!-- Tags List -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="text-left py-4 px-6 text-gray-600 font-medium">Názov</th>
+                    <th class="text-left py-4 px-6 text-gray-600 font-medium">Slug</th>
+                    <th class="text-center py-4 px-6 text-gray-600 font-medium">Počet pizz</th>
+                    <th class="text-right py-4 px-6 text-gray-600 font-medium">Akcie</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="tag : ${tags}" class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="py-4 px-6 font-medium text-dodo-dark" th:text="${tag.nameSk}">Tag</td>
+                    <td class="py-4 px-6 text-gray-500" th:text="${tag.slug}">slug</td>
+                    <td class="py-4 px-6 text-center" th:text="${tag.pizzas.size()}">0</td>
+                    <td class="py-4 px-6 text-right">
+                        <form th:action="@{/admin/tags/{id}/delete(id=${tag.id})}" method="post" class="inline"
+                              onsubmit="return confirm('Naozaj vymazať tag?')">
+                            <button type="submit" class="text-red-600 hover:underline"
+                                    th:disabled="${tag.pizzas.size() > 0}">
+                                Vymazať
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>
+

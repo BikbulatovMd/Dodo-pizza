@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Správa pizz')}"></head>
+<body class="bg-dodo-light min-h-screen flex flex-col">
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<main class="flex-grow">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <a href="/admin" class="text-dodo-orange hover:underline mb-2 inline-block">&larr; Admin Panel</a>
+                <h1 class="text-3xl font-bold text-dodo-dark">🍕 Správa pizz</h1>
+            </div>
+            <a href="/admin/pizzas/new"
+               class="bg-dodo-orange text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+                + Pridať pizzu
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="text-left py-4 px-6 text-gray-600 font-medium">Pizza</th>
+                    <th class="text-left py-4 px-6 text-gray-600 font-medium">Slug</th>
+                    <th class="text-left py-4 px-6 text-gray-600 font-medium">Stav</th>
+                    <th class="text-left py-4 px-6 text-gray-600 font-medium">Veľkosti</th>
+                    <th class="text-right py-4 px-6 text-gray-600 font-medium">Akcie</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="pizza : ${pizzas.content}" class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="py-4 px-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-dodo-orange to-dodo-red flex items-center justify-center overflow-hidden">
+                                <img th:if="${pizza.imageUrl}" th:src="${pizza.imageUrl}" class="w-full h-full object-cover">
+                                <span th:unless="${pizza.imageUrl}" class="text-2xl">🍕</span>
+                            </div>
+                            <span th:text="${pizza.nameSk}" class="font-medium text-dodo-dark">Pizza</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6 text-gray-500" th:text="${pizza.slug}">slug</td>
+                    <td class="py-4 px-6">
+                        <span th:if="${pizza.active}" class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">Aktívna</span>
+                        <span th:unless="${pizza.active}" class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-sm">Neaktívna</span>
+                    </td>
+                    <td class="py-4 px-6" th:text="${pizza.sizes.size()}">0</td>
+                    <td class="py-4 px-6 text-right space-x-2">
+                        <a th:href="@{/admin/pizzas/{id}/sizes(id=${pizza.id})}"
+                           class="text-purple-600 hover:underline">Veľkosti</a>
+                        <a th:href="@{/admin/pizzas/{id}/edit(id=${pizza.id})}"
+                           class="text-blue-600 hover:underline">Upraviť</a>
+                        <form th:action="@{/admin/pizzas/{id}/toggle(id=${pizza.id})}" method="post" class="inline">
+                            <button type="submit" th:text="${pizza.active} ? 'Deaktivovať' : 'Aktivovať'"
+                                    class="text-orange-600 hover:underline">Toggle</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${pizzas.totalPages > 1}" th:replace="~{fragments/pagination :: pagination(${pizzas}, '/admin/pizzas')}"></div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>
+

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/header :: head('Správa ingrediencií')}"></head>
+  <body class="bg-dodo-light min-h-screen flex flex-col">
+    <nav th:replace="~{fragments/header :: navbar}"></nav>
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <main class="flex-grow">
+      <div class="max-w-5xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+          <div>
+            <a href="/admin" class="text-dodo-orange hover:underline mb-2 inline-block"
+              >&larr; Admin Panel</a
+            >
+            <h1 class="text-3xl font-bold text-dodo-dark">🧀 Správa ingrediencií</h1>
+          </div>
+          <a
+            href="/admin/ingredients/new"
+            class="bg-dodo-orange text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
+          >
+            + Pridať ingredienciu
+          </a>
+        </div>
+
+        <!-- Search -->
+        <form th:action="@{/admin/ingredients}" method="get" class="mb-6">
+          <div class="flex gap-4">
+            <input
+              type="text"
+              name="search"
+              th:value="${search}"
+              placeholder="Hľadať ingredienciu..."
+              class="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange"
+            />
+            <button
+              type="submit"
+              class="bg-dodo-dark text-white px-6 py-2 rounded-lg hover:bg-dodo-blue transition"
+            >
+              Hľadať
+            </button>
+          </div>
+        </form>
+
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="text-left py-4 px-6 text-gray-600 font-medium">Názov</th>
+                <th class="text-left py-4 px-6 text-gray-600 font-medium">Alergény</th>
+                <th class="text-center py-4 px-6 text-gray-600 font-medium">Vegan</th>
+                <th class="text-center py-4 px-6 text-gray-600 font-medium">Pikantné</th>
+                <th class="text-right py-4 px-6 text-gray-600 font-medium">Extra cena</th>
+                <th class="text-right py-4 px-6 text-gray-600 font-medium">Akcie</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                th:each="ing : ${ingredients.content}"
+                class="border-b border-gray-100 hover:bg-gray-50"
+              >
+                <td class="py-4 px-6 font-medium text-dodo-dark" th:text="${ing.nameSk}">
+                  Ingrediencia
+                </td>
+                <td class="py-4 px-6 text-gray-500" th:text="${ing.allergenInfoSk ?: '-'}">-</td>
+                <td class="py-4 px-6 text-center">
+                  <span th:if="${ing.vegan}" class="text-green-500">🌱</span>
+                  <span th:unless="${ing.vegan}" class="text-gray-300">-</span>
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <span th:if="${ing.spicy}" class="text-red-500">🌶️</span>
+                  <span th:unless="${ing.spicy}" class="text-gray-300">-</span>
+                </td>
+                <td class="py-4 px-6 text-right font-medium">
+                  <span th:text="${#numbers.formatDecimal(ing.extraPriceEur, 1, 2)}">0.00</span> €
+                </td>
+                <td class="py-4 px-6 text-right space-x-2">
+                  <a
+                    th:href="@{/admin/ingredients/{id}/edit(id=${ing.id})}"
+                    class="text-blue-600 hover:underline"
+                    >Upraviť</a
+                  >
+                  <form
+                    th:action="@{/admin/ingredients/{id}/delete(id=${ing.id})}"
+                    method="post"
+                    class="inline"
+                    onsubmit="return confirm('Naozaj vymazať?')"
+                  >
+                    <button type="submit" class="text-red-600 hover:underline">Vymazať</button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          th:if="${ingredients.totalPages > 1}"
+          th:replace="~{fragments/pagination :: pagination(${ingredients}, '/admin/ingredients')}"
+        ></div>
+      </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>

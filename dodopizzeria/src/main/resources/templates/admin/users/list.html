@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Správa používateľov')}"></head>
+<body class="bg-dodo-light min-h-screen flex flex-col">
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<main class="flex-grow">
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <a href="/admin" class="text-dodo-orange hover:underline mb-4 inline-block">&larr; Admin Panel</a>
+        <h1 class="text-3xl font-bold text-dodo-dark mb-8">👥 Správa používateľov</h1>
+
+        <!-- Search -->
+        <form th:action="@{/admin/users}" method="get" class="mb-6">
+            <div class="flex gap-4">
+                <input type="text" name="search" th:value="${search}" placeholder="Hľadať podľa mena alebo emailu..."
+                       class="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange">
+                <button type="submit" class="bg-dodo-dark text-white px-6 py-2 rounded-lg hover:bg-dodo-blue transition">Hľadať</button>
+            </div>
+        </form>
+
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="text-left py-4 px-6 text-gray-600 font-medium">Používateľ</th>
+                    <th class="text-left py-4 px-6 text-gray-600 font-medium">Email</th>
+                    <th class="text-left py-4 px-6 text-gray-600 font-medium">Roly</th>
+                    <th class="text-center py-4 px-6 text-gray-600 font-medium">Stav</th>
+                    <th class="text-right py-4 px-6 text-gray-600 font-medium">Akcie</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users.content}" class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="py-4 px-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full bg-dodo-orange flex items-center justify-center text-white font-semibold overflow-hidden">
+                                <img th:if="${user.profileImageUrl}" th:src="${user.profileImageUrl}" class="w-full h-full object-cover">
+                                <span th:unless="${user.profileImageUrl}" th:text="${user.firstName.charAt(0)}">U</span>
+                            </div>
+                            <span th:text="${user.fullName}" class="font-medium text-dodo-dark">Meno</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6 text-gray-500" th:text="${user.email}">email</td>
+                    <td class="py-4 px-6">
+                        <span th:each="role : ${user.roles}"
+                              th:text="${role.displayNameSk}"
+                              class="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs mr-1">
+                            Role
+                        </span>
+                    </td>
+                    <td class="py-4 px-6 text-center">
+                        <span th:if="${user.enabled}" class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">Aktívny</span>
+                        <span th:unless="${user.enabled}" class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-sm">Blokovaný</span>
+                    </td>
+                    <td class="py-4 px-6 text-right space-x-2">
+                        <a th:href="@{/admin/users/{id}(id=${user.id})}" class="text-blue-600 hover:underline">Detail</a>
+                        <form th:action="@{/admin/users/{id}/toggle(id=${user.id})}" method="post" class="inline">
+                            <button type="submit" th:text="${user.enabled} ? 'Blokovať' : 'Aktivovať'"
+                                    class="text-orange-600 hover:underline">Toggle</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${users.totalPages > 1}" th:replace="~{fragments/pagination :: pagination(${users}, '/admin/users')}"></div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>
+
