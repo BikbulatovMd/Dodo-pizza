@@ -1,4 +1,4 @@
--- Vytvorenie databázy a tabuliek pre projekt Pizzeria (bez dát)
+
 
 DROP DATABASE IF EXISTS dodo_pizza;
 CREATE DATABASE dodo_pizza
@@ -7,7 +7,6 @@ CREATE DATABASE dodo_pizza
 
 USE dodo_pizza;
 
--- Roly používateľov
 CREATE TABLE roles (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(50) NOT NULL UNIQUE,
@@ -16,7 +15,6 @@ CREATE TABLE roles (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Používatelia
 CREATE TABLE users (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(120) NOT NULL UNIQUE,
@@ -31,7 +29,6 @@ CREATE TABLE users (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Prepojenie používateľov a rolí (many-to-many)
 CREATE TABLE user_roles (
   user_id BIGINT NOT NULL,
   role_id BIGINT NOT NULL,
@@ -44,7 +41,6 @@ CREATE TABLE user_roles (
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- Pizze v katalógu
 CREATE TABLE pizzas (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name_sk VARCHAR(120) NOT NULL,
@@ -56,7 +52,6 @@ CREATE TABLE pizzas (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Veľkosti pizze (S/M/L) s cenou a priemerom
 CREATE TABLE pizza_sizes (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   pizza_id BIGINT NOT NULL,
@@ -72,7 +67,6 @@ CREATE TABLE pizza_sizes (
     ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- Ingrediencie (aj pre extra prísady)
 CREATE TABLE ingredients (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name_sk VARCHAR(120) NOT NULL UNIQUE,
@@ -84,7 +78,6 @@ CREATE TABLE ingredients (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Tagy pre filtrovanie a označenie
 CREATE TABLE tags (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name_sk VARCHAR(80) NOT NULL UNIQUE,
@@ -93,7 +86,6 @@ CREATE TABLE tags (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Základný recept pizze (many-to-many)
 CREATE TABLE pizza_ingredients (
   pizza_id BIGINT NOT NULL,
   ingredient_id BIGINT NOT NULL,
@@ -106,7 +98,6 @@ CREATE TABLE pizza_ingredients (
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- Prepojenie pizza - tag (many-to-many)
 CREATE TABLE pizza_tags (
   pizza_id BIGINT NOT NULL,
   tag_id BIGINT NOT NULL,
@@ -119,7 +110,7 @@ CREATE TABLE pizza_tags (
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- Objednávky (hlavička)
+
 CREATE TABLE orders (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL,
@@ -135,7 +126,6 @@ CREATE TABLE orders (
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- Položky objednávky (snapshottované údaje pre zachovanie histórie)
 CREATE TABLE order_items (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   order_id BIGINT NOT NULL,
@@ -155,7 +145,6 @@ CREATE TABLE order_items (
     ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- Extra prísady pridané ku konkrétnej položke objednávky
 CREATE TABLE order_item_extras (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   order_item_id BIGINT NOT NULL,
@@ -173,7 +162,6 @@ CREATE TABLE order_item_extras (
     ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- Indexy pre rýchle filtrovanie a vyhľadávanie
 CREATE INDEX idx_pizzas_active ON pizzas(active);
 CREATE INDEX idx_orders_status ON orders(status);
 CREATE INDEX idx_orders_user ON orders(user_id);
@@ -265,18 +253,19 @@ INSERT INTO ingredients (name_sk, allergen_info_sk, vegan, spicy, extra_price_eu
 ('Ananás', NULL, TRUE, FALSE, 1.00),
 ('Rukola', NULL, TRUE, FALSE, 1.00);
 
--- Pizze (10 ks)
-INSERT INTO pizzas (name_sk, description_sk, slug, image_url, active) VALUES
-('Margherita', 'Paradajkový základ, mozzarella, bazalka.', 'margherita', '/img/pizzas/margherita.jpg', TRUE),
-('Šunková', 'Paradajkový základ, mozzarella, šunka.', 'sunkova', '/img/pizzas/sunkova.jpg', TRUE),
-('Salámová', 'Paradajkový základ, mozzarella, saláma.', 'salamova', '/img/pizzas/salamova.jpg', TRUE),
-('Hawai', 'Paradajkový základ, mozzarella, šunka, ananás.', 'hawai', '/img/pizzas/hawai.jpg', TRUE),
-('Quattro Formaggi', 'Mozzarella, parmezán a ďalšie syry.', 'quattro-formaggi', '/img/pizzas/quattro-formaggi.jpg', TRUE),
-('Funghi', 'Paradajkový základ, mozzarella, šampiňóny.', 'funghi', '/img/pizzas/funghi.jpg', TRUE),
-('Vegetariánska', 'Zelenina, mozzarella, olivy.', 'vegetarianska', '/img/pizzas/vegetarianska.jpg', TRUE),
-('Diavola', 'Pikantná saláma, jalapeño, mozzarella.', 'diavola', '/img/pizzas/diavola.jpg', TRUE),
-('Tuniaková', 'Paradajkový základ, mozzarella, tuniak, cibuľa.', 'tuniakova', '/img/pizzas/tuniakova.jpg', TRUE),
-('Kuracia BBQ', 'BBQ základ, mozzarella, kuracie mäso, cibuľa.', 'kuracia-bbq', '/img/pizzas/kuracia-bbq.jpg', TRUE);
+
+INSERT INTO pizzas (id, name_sk, description_sk, slug, image_url, active, created_at, updated_at) VALUES
+(1, 'Margherita', 'Paradajkový základ, mozzarella, bazalka.', 'margherita', '/uploads/pizzas/margherita.webp', 1, NOW(), NOW()),
+(2, 'Šunková', 'Paradajkový základ, mozzarella, šunka.', 'sunkova', '/uploads/pizzas/sunkova.webp', 1, NOW(), NOW()),
+(3, 'Salámová', 'Paradajkový základ, mozzarella, saláma.', 'salamova', '/uploads/pizzas/salamova.webp', 1, NOW(), NOW()),
+(4, 'Hawai', 'Paradajkový základ, mozzarella, šunka, ananás.', 'hawai', '/uploads/pizzas/hawai.webp', 1, NOW(), NOW()),
+(5, 'Quattro Formaggi', 'Mozzarella, parmezán a ďalšie syry.', 'quattro-formaggi', '/uploads/pizzas/quattro-formaggi.webp', 1, NOW(), NOW()),
+(6, 'Funghi', 'Paradajkový základ, mozzarella, šampiňóny.', 'funghi', '/uploads/pizzas/funghi.webp', 1, NOW(), NOW()),
+(7, 'Vegetariánska', 'Zelenina, mozzarella, olivy.', 'vegetarianska', '/uploads/pizzas/vegetarianska.webp', 1, NOW(), NOW()),
+(8, 'Diavola', 'Pikantná saláma, jalapeño, mozzarella.', 'diavola', '/uploads/pizzas/diavola.webp', 1, NOW(), NOW()),
+(9, 'Tuniaková', 'Paradajkový základ, mozzarella, tuniak, cibuľa.', 'tuniakova', '/uploads/pizzas/tuniakova.webp', 1, NOW(), NOW()),
+(10, 'Kuracia BBQ', 'BBQ základ, mozzarella, kuracie mäso, cibuľa.', 'kuracia-bbq', '/uploads/pizzas/kuracia-bbq.webp', 1, NOW(), NOW());
+
 
 -- Veľkosti pre každú pizzu (S/M/L)
 INSERT INTO pizza_sizes (pizza_id, size_code, diameter_cm, price_eur, available)
