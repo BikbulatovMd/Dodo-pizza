@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Môj profil')}"></head>
+<body class="bg-dodo-light min-h-screen flex flex-col">
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<main class="flex-grow">
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-dodo-dark mb-8">👤 Môj profil</h1>
+
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <!-- Profile Header -->
+            <div class="bg-gradient-to-r from-dodo-dark to-dodo-blue p-8 text-center">
+                <div class="relative inline-block">
+                    <img th:if="${user.profileImageUrl}"
+                         th:src="${user.profileImageUrl}"
+                         class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+                    <div th:unless="${user.profileImageUrl}"
+                         class="w-32 h-32 rounded-full bg-dodo-orange flex items-center justify-center text-white text-4xl font-bold border-4 border-white shadow-lg">
+                        <span th:text="${user.firstName.charAt(0)}">U</span>
+                    </div>
+                </div>
+                <h2 th:text="${user.fullName}" class="text-2xl font-bold text-white mt-4">Meno Priezvisko</h2>
+                <p th:text="${user.email}" class="text-gray-300">email@example.com</p>
+            </div>
+
+            <!-- Profile Image Upload -->
+            <div class="p-6 border-b border-gray-100">
+                <form th:action="@{/profile/image}" method="post" enctype="multipart/form-data"
+                      class="flex flex-col sm:flex-row items-center gap-4">
+                    <input type="file" name="image" accept="image/*" required
+                           class="flex-grow text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-dodo-orange file:text-white hover:file:bg-orange-600">
+                    <button type="submit"
+                            class="bg-dodo-dark text-white px-4 py-2 rounded-lg font-semibold hover:bg-dodo-blue transition">
+                        Nahrať obrázok
+                    </button>
+                </form>
+            </div>
+
+            <!-- Profile Details -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <span class="text-sm text-gray-500">Meno</span>
+                        <p th:text="${user.firstName}" class="font-medium text-dodo-dark">Meno</p>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500">Priezvisko</span>
+                        <p th:text="${user.lastName}" class="font-medium text-dodo-dark">Priezvisko</p>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500">Email</span>
+                        <p th:text="${user.email}" class="font-medium text-dodo-dark">email@example.com</p>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500">Telefón</span>
+                        <p th:text="${user.phone ?: 'Neuvedený'}" class="font-medium text-dodo-dark">+421...</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <span class="text-sm text-gray-500">Adresa doručenia</span>
+                        <p th:text="${user.deliveryAddress ?: 'Neuvedená'}" class="font-medium text-dodo-dark">Adresa</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                    <a href="/profile/edit"
+                       class="flex-1 bg-dodo-orange text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition text-center">
+                        ✏️ Upraviť profil
+                    </a>
+                    <a href="/profile/password"
+                       class="flex-1 bg-dodo-dark text-white py-3 rounded-lg font-semibold hover:bg-dodo-blue transition text-center">
+                        🔒 Zmeniť heslo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>
+
