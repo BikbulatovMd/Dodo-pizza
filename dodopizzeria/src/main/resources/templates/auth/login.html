@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/header :: head('Prihlásenie')}"></head>
+  <body
+    class="bg-gradient-to-br from-dodo-dark to-dodo-blue min-h-screen flex items-center justify-center"
+  >
+    <div class="max-w-md w-full mx-4">
+      <div class="text-center mb-8">
+        <a href="/" class="flex items-center justify-center space-x-2">
+          <span class="text-5xl">🍕</span>
+          <span class="text-white font-bold text-3xl">Dodo Pizzeria</span>
+        </a>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-2xl p-8">
+        <h2 class="text-2xl font-bold text-dodo-dark text-center mb-6">Prihlásenie</h2>
+
+        <!-- Success message (from registration) -->
+        <div
+          th:if="${param.logout}"
+          class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-4"
+        >
+          Boli ste úspešne odhlásení.
+        </div>
+
+        <div
+          th:if="${success}"
+          class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-4"
+        >
+          <span th:text="${success}"></span>
+        </div>
+
+        <!-- Error message -->
+        <div
+          th:if="${param.error}"
+          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4"
+        >
+          Nesprávny email alebo heslo.
+        </div>
+
+        <form th:action="@{/login}" method="post" class="space-y-6">
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <input
+              type="email"
+              id="username"
+              name="username"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange focus:border-transparent"
+              placeholder="vas@email.sk"
+            />
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Heslo</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange focus:border-transparent"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-dodo-orange text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition"
+          >
+            Prihlásiť sa
+          </button>
+        </form>
+
+        <div class="mt-6 text-center">
+          <p class="text-gray-600">
+            Nemáte účet?
+            <a href="/register" class="text-dodo-orange font-semibold hover:underline"
+              >Zaregistrujte sa</a
+            >
+          </p>
+        </div>
+
+        <div class="mt-4 text-center">
+          <a href="/" class="text-gray-500 hover:text-dodo-dark transition"
+            >&larr; Späť na hlavnú stránku</a
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<nav th:fragment="pagination(page, baseUrl)" aria-label="Pagination" class="flex justify-center mt-8">
+    <ul class="flex items-center space-x-1">
+        <!-- Previous -->
+        <li>
+            <a th:if="${!page.first}"
+               th:href="@{${baseUrl}(page=${page.number - 1})}"
+               class="px-3 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-dodo-orange hover:text-white transition">
+                &laquo; Predošlá
+            </a>
+            <span th:if="${page.first}"
+                  class="px-3 py-2 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed">
+                &laquo; Predošlá
+            </span>
+        </li>
+
+        <!-- Page Numbers -->
+        <li th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+            <a th:if="${i != page.number}"
+               th:href="@{${baseUrl}(page=${i})}"
+               th:text="${i + 1}"
+               class="px-3 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-dodo-orange hover:text-white transition">
+            </a>
+            <span th:if="${i == page.number}"
+                  th:text="${i + 1}"
+                  class="px-3 py-2 rounded-lg bg-dodo-orange text-white">
+            </span>
+        </li>
+
+        <!-- Next -->
+        <li>
+            <a th:if="${!page.last}"
+               th:href="@{${baseUrl}(page=${page.number + 1})}"
+               class="px-3 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-dodo-orange hover:text-white transition">
+                Ďalšia &raquo;
+            </a>
+            <span th:if="${page.last}"
+                  class="px-3 py-2 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed">
+                Ďalšia &raquo;
+            </span>
+        </li>
+    </ul>
+</nav>
+
+</html>
+

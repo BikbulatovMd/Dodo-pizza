@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<footer th:fragment="footer" class="bg-dodo-dark text-white mt-auto">
+    <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Brand -->
+            <div>
+                <div class="flex items-center space-x-2 mb-4">
+                    <span class="text-3xl">🍕</span>
+                    <span class="font-bold text-xl">Dodo Pizzeria</span>
+                </div>
+                <p class="text-gray-400">Najlepšia pizza v meste. Čerstvé ingrediencie, rýchle doručenie.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="font-semibold text-lg mb-4">Rýchle odkazy</h3>
+                <ul class="space-y-2">
+                    <li><a href="/menu" class="text-gray-400 hover:text-dodo-orange transition">Menu</a></li>
+                    <li><a href="/cart" class="text-gray-400 hover:text-dodo-orange transition">Košík</a></li>
+                    <li><a href="/orders" class="text-gray-400 hover:text-dodo-orange transition">Objednávky</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div>
+                <h3 class="font-semibold text-lg mb-4">Kontakt</h3>
+                <ul class="space-y-2 text-gray-400">
+                    <li>📍 Hlavná 123, Bratislava</li>
+                    <li>📞 +421 900 123 456</li>
+                    <li>✉️ info@dodopizzeria.sk</li>
+                </ul>
+            </div>
+
+            <!-- Opening Hours -->
+            <div>
+                <h3 class="font-semibold text-lg mb-4">Otváracie hodiny</h3>
+                <ul class="space-y-2 text-gray-400">
+                    <li>Po - Pi: 10:00 - 22:00</li>
+                    <li>So - Ne: 11:00 - 23:00</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2025 Dodo Pizzeria. Všetky práva vyhradené.</p>
+        </div>
+    </div>
+</footer>
+
+</html>
+
