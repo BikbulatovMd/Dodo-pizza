@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head th:replace="~{fragments/header :: head('Košík')}"></head>
+  <body class="bg-dodo-light min-h-screen flex flex-col">
+    <nav th:replace="~{fragments/header :: navbar}"></nav>
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <main class="flex-grow">
+      <div class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-dodo-dark mb-8">🛒 Váš košík</h1>
+
+        <!-- Empty Cart -->
+        <div
+          th:if="${#lists.isEmpty(cartItems)}"
+          class="bg-white rounded-2xl shadow-lg p-12 text-center"
+        >
+          <span class="text-6xl">🛒</span>
+          <h2 class="text-2xl font-bold text-dodo-dark mt-4 mb-2">Váš košík je prázdny</h2>
+          <p class="text-gray-600 mb-6">Pridajte si pizzu z nášho menu!</p>
+          <a
+            href="/menu"
+            class="bg-dodo-orange text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition inline-block"
+          >
+            Prejsť na menu
+          </a>
+        </div>
+
+        <!-- Cart Items -->
+        <div th:unless="${#lists.isEmpty(cartItems)}" class="space-y-6">
+          <div th:each="item : ${cartItems}" class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="flex flex-col md:flex-row">
+              <!-- Image -->
+              <div
+                class="w-full md:w-32 h-32 bg-gradient-to-br from-dodo-orange to-dodo-red flex-shrink-0 flex items-center justify-center"
+              >
+                <img
+                  th:if="${item.pizzaImageUrl}"
+                  th:src="${item.pizzaImageUrl}"
+                  th:alt="${item.pizzaName}"
+                  class="h-full w-full object-cover"
+                />
+                <span th:unless="${item.pizzaImageUrl}" class="text-5xl">🍕</span>
+              </div>
+
+              <!-- Details -->
+              <div class="flex-grow p-6">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 th:text="${item.pizzaName}" class="text-xl font-bold text-dodo-dark">
+                      Pizza
+                    </h3>
+                    <p class="text-gray-600">
+                      Veľkosť: <span th:text="${item.sizeCode}">M</span> (<span
+                        th:text="${item.diameterCm}"
+                        >30</span
+                      >
+                      cm)
+                    </p>
+                  </div>
+                  <form th:action="@{/cart/remove}" method="post">
+                    <input type="hidden" name="itemId" th:value="${item.itemId}" />
+                    <button type="submit" class="text-red-500 hover:text-red-700 transition">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </form>
+                </div>
+
+                <!-- Extras -->
+                <div th:if="${not #lists.isEmpty(item.extras)}" class="mt-2">
+                  <span class="text-sm text-gray-500">Extra: </span>
+                  <span th:each="extra, stat : ${item.extras}" class="text-sm text-gray-600">
+                    <span th:text="${extra.ingredientName}">Extra</span>
+                    (+<span th:text="${#numbers.formatDecimal(extra.price, 1, 2)}">0.00</span>
+                    €)<span th:unless="${stat.last}">, </span>
+                  </span>
+                </div>
+
+                <div class="flex justify-between items-center mt-4">
+                  <!-- Quantity Update -->
+                  <form
+                    th:action="@{/cart/update}"
+                    method="post"
+                    class="flex items-center space-x-2"
+                  >
+                    <input type="hidden" name="itemId" th:value="${item.itemId}" />
+                    <button
+                      type="submit"
+                      name="quantity"
+                      th:value="${item.quantity - 1}"
+                      class="w-8 h-8 bg-gray-200 rounded-lg font-bold hover:bg-gray-300 transition"
+                      th:disabled="${item.quantity <= 1}"
+                    >
+                      -
+                    </button>
+                    <span th:text="${item.quantity}" class="w-8 text-center font-semibold">1</span>
+                    <button
+                      type="submit"
+                      name="quantity"
+                      th:value="${item.quantity + 1}"
+                      class="w-8 h-8 bg-gray-200 rounded-lg font-bold hover:bg-gray-300 transition"
+                    >
+                      +
+                    </button>
+                  </form>
+
+                  <span class="text-xl font-bold text-dodo-orange">
+                    <span th:text="${#numbers.formatDecimal(item.totalPrice, 1, 2)}">0.00</span> €
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total and Actions -->
+          <div class="bg-white rounded-2xl shadow-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+              <span class="text-xl text-gray-700">Celkom:</span>
+              <span class="text-3xl font-bold text-dodo-orange">
+                <span th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}">0.00</span> €
+              </span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+              <form th:action="@{/cart/clear}" method="post" class="flex-1">
+                <button
+                  type="submit"
+                  class="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
+                >
+                  Vyprázdniť košík
+                </button>
+              </form>
+              <a
+                href="/checkout"
+                class="flex-1 bg-dodo-orange text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition text-center"
+              >
+                Pokračovať k objednávke
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>
