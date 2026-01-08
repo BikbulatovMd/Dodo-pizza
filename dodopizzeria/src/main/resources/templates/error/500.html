@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Chyba servera')}"></head>
+<body class="bg-dodo-light min-h-screen flex flex-col">
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+
+<main class="flex-grow flex items-center justify-center">
+    <div class="text-center px-4">
+        <div class="text-9xl mb-8">🔥</div>
+        <h1 class="text-6xl font-bold text-dodo-red mb-4">500</h1>
+        <h2 class="text-2xl font-bold text-dodo-dark mb-4">Chyba servera</h2>
+        <p class="text-gray-600 mb-8 max-w-md mx-auto">
+            Niečo sa pokazilo na našej strane. Naši technici už na tom pracujú. Skúste to prosím neskôr.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/"
+               class="bg-dodo-orange text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+                Späť na hlavnú stránku
+            </a>
+            <a href="/menu"
+               class="bg-dodo-dark text-white px-6 py-3 rounded-lg font-semibold hover:bg-dodo-blue transition">
+                Prezrieť menu
+            </a>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>
+
