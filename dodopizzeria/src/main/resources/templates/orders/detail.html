@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="~{fragments/header :: head('Objednávka ' + ${order.orderNumber})}"></head>
+  <body class="bg-dodo-light min-h-screen flex flex-col">
+    <nav th:replace="~{fragments/header :: navbar}"></nav>
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <main class="flex-grow">
+      <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+          <div>
+            <a href="/orders" class="text-dodo-orange hover:underline mb-2 inline-block"
+              >&larr; Späť na objednávky</a
+            >
+            <h1 class="text-3xl font-bold text-dodo-dark">
+              Objednávka <span th:text="${order.orderNumber}">DP-xxx</span>
+            </h1>
+          </div>
+          <span th:switch="${order.status.name()}" class="mt-4 md:mt-0">
+            <span
+              th:case="'PENDING'"
+              class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-lg font-medium"
+            >
+              ⏳ Čakajúca
+            </span>
+            <span
+              th:case="'PREPARING'"
+              class="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-lg font-medium"
+            >
+              👨‍🍳 Pripravuje sa
+            </span>
+            <span
+              th:case="'READY'"
+              class="px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-lg font-medium"
+            >
+              ✓ Pripravená
+            </span>
+            <span
+              th:case="'DELIVERING'"
+              class="px-4 py-2 bg-orange-100 text-orange-800 rounded-full text-lg font-medium"
+            >
+              🚗 Doručuje sa
+            </span>
+            <span
+              th:case="'DELIVERED'"
+              class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-lg font-medium"
+            >
+              ✓ Doručená
+            </span>
+            <span
+              th:case="'CANCELLED'"
+              class="px-4 py-2 bg-red-100 text-red-800 rounded-full text-lg font-medium"
+            >
+              ✕ Zrušená
+            </span>
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Order Items -->
+          <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-dodo-dark mb-4">Položky objednávky</h2>
+
+            <div class="space-y-4">
+              <div
+                th:each="item : ${order.items}"
+                class="flex justify-between items-start pb-4 border-b border-gray-100 last:border-0"
+              >
+                <div>
+                  <h4 th:text="${item.pizzaNameSnapshot}" class="font-semibold text-dodo-dark">
+                    Pizza
+                  </h4>
+                  <p class="text-sm text-gray-500">
+                    <span th:text="${item.sizeSnapshot}">M</span>
+                    (<span th:text="${item.diameterSnapshotCm}">30</span> cm) ×
+                    <span th:text="${item.quantity}">1</span> @
+                    <span th:text="${#numbers.formatDecimal(item.unitPriceSnapshotEur, 1, 2)}"
+                      >0.00</span
+                    >
+                    €
+                  </p>
+                  <div th:if="${not #lists.isEmpty(item.extras)}" class="mt-1">
+                    <span th:each="extra : ${item.extras}" class="text-xs text-gray-400 block">
+                      + <span th:text="${extra.ingredientNameSnapshot}">Extra</span> (<span
+                        th:text="${#numbers.formatDecimal(extra.extraPriceSnapshotEur, 1, 2)}"
+                        >0.00</span
+                      >
+                      € × <span th:text="${extra.quantity}">1</span>)
+                    </span>
+                  </div>
+                </div>
+                <span class="font-semibold text-dodo-dark">
+                  <span th:text="${#numbers.formatDecimal(item.lineTotalEur, 1, 2)}">0.00</span> €
+                </span>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
+              <span class="text-xl font-bold text-dodo-dark">Celkom:</span>
+              <span class="text-2xl font-bold text-dodo-orange">
+                <span th:text="${#numbers.formatDecimal(order.totalPriceEur, 1, 2)}">0.00</span> €
+              </span>
+            </div>
+          </div>
+
+          <!-- Order Info -->
+          <div class="space-y-6">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+              <h2 class="text-lg font-bold text-dodo-dark mb-4">Informácie</h2>
+              <div class="space-y-3 text-sm">
+                <div>
+                  <span class="text-gray-500">Dátum vytvorenia:</span>
+                  <p
+                    class="font-medium"
+                    th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"
+                  >
+                    01.01.2025
+                  </p>
+                </div>
+                <div>
+                  <span class="text-gray-500">Adresa doručenia:</span>
+                  <p class="font-medium" th:text="${order.deliveryAddress}">Adresa</p>
+                </div>
+                <div th:if="${order.customerNote}">
+                  <span class="text-gray-500">Poznámka:</span>
+                  <p class="font-medium" th:text="${order.customerNote}">Poznámka</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Status Timeline (simplified) -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+              <h2 class="text-lg font-bold text-dodo-dark mb-4">Stav objednávky</h2>
+              <div class="space-y-3">
+                <div
+                  class="flex items-center space-x-3"
+                  th:classappend="${order.status.ordinal() >= 0} ? 'text-green-600' : 'text-gray-400'"
+                >
+                  <span
+                    class="w-3 h-3 rounded-full"
+                    th:classappend="${order.status.ordinal() >= 0} ? 'bg-green-600' : 'bg-gray-300'"
+                  ></span>
+                  <span>Prijatá</span>
+                </div>
+                <div
+                  class="flex items-center space-x-3"
+                  th:classappend="${order.status.ordinal() >= 1} ? 'text-green-600' : 'text-gray-400'"
+                >
+                  <span
+                    class="w-3 h-3 rounded-full"
+                    th:classappend="${order.status.ordinal() >= 1} ? 'bg-green-600' : 'bg-gray-300'"
+                  ></span>
+                  <span>Pripravuje sa</span>
+                </div>
+                <div
+                  class="flex items-center space-x-3"
+                  th:classappend="${order.status.ordinal() >= 2} ? 'text-green-600' : 'text-gray-400'"
+                >
+                  <span
+                    class="w-3 h-3 rounded-full"
+                    th:classappend="${order.status.ordinal() >= 2} ? 'bg-green-600' : 'bg-gray-300'"
+                  ></span>
+                  <span>Pripravená</span>
+                </div>
+                <div
+                  class="flex items-center space-x-3"
+                  th:classappend="${order.status.ordinal() >= 3} ? 'text-green-600' : 'text-gray-400'"
+                >
+                  <span
+                    class="w-3 h-3 rounded-full"
+                    th:classappend="${order.status.ordinal() >= 3} ? 'bg-green-600' : 'bg-gray-300'"
+                  ></span>
+                  <span>Na ceste</span>
+                </div>
+                <div
+                  class="flex items-center space-x-3"
+                  th:classappend="${order.status.ordinal() >= 4} ? 'text-green-600' : 'text-gray-400'"
+                >
+                  <span
+                    class="w-3 h-3 rounded-full"
+                    th:classappend="${order.status.ordinal() >= 4} ? 'bg-green-600' : 'bg-gray-300'"
+                  ></span>
+                  <span>Doručená</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>

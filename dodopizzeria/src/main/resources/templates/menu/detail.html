@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header :: head(${pizza.nameSk})}"></head>
+<body class="bg-dodo-light min-h-screen flex flex-col">
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<main class="flex-grow">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Breadcrumb -->
+        <nav class="mb-8">
+            <ol class="flex items-center space-x-2 text-gray-600">
+                <li><a href="/" class="hover:text-dodo-orange">Domov</a></li>
+                <li>/</li>
+                <li><a href="/menu" class="hover:text-dodo-orange">Menu</a></li>
+                <li>/</li>
+                <li th:text="${pizza.nameSk}" class="text-dodo-dark font-semibold">Pizza</li>
+            </ol>
+        </nav>
+
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <!-- Image -->
+                <div class="h-80 lg:h-auto bg-gradient-to-br from-dodo-orange to-dodo-red flex items-center justify-center">
+                    <img th:if="${pizza.imageUrl}" th:src="${pizza.imageUrl}" th:alt="${pizza.nameSk}"
+                         class="h-full w-full object-cover">
+                    <span th:unless="${pizza.imageUrl}" class="text-9xl">🍕</span>
+                </div>
+
+                <!-- Details -->
+                <div class="p-8">
+                    <!-- Tags -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span th:each="t : ${pizza.tags}"
+                              th:text="${t.nameSk}"
+                              class="text-sm bg-dodo-light text-dodo-dark px-3 py-1 rounded-full">
+                        </span>
+                    </div>
+
+                    <h1 th:text="${pizza.nameSk}" class="text-3xl font-bold text-dodo-dark mb-4">Pizza</h1>
+                    <p th:text="${pizza.descriptionSk}" class="text-gray-600 mb-6">Popis</p>
+
+                    <!-- Ingredients -->
+                    <div class="mb-6">
+                        <h3 class="font-semibold text-dodo-dark mb-2">Ingrediencie:</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span th:each="ing : ${pizza.ingredients}"
+                                  class="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
+                                <span th:text="${ing.nameSk}">Ingrediencia</span>
+                                <span th:if="${ing.vegan}" class="ml-1">🌱</span>
+                                <span th:if="${ing.spicy}" class="ml-1">🌶️</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Order Form -->
+                    <form th:action="@{/cart/add}" method="post" sec:authorize="isAuthenticated()" class="space-y-6">
+                        <input type="hidden" name="pizzaId" th:value="${pizza.id}">
+
+                        <!-- Size Selection -->
+                        <div>
+                            <h3 class="font-semibold text-dodo-dark mb-3">Vyberte veľkosť:</h3>
+                            <div class="grid grid-cols-3 gap-4">
+                                <label th:each="size : ${availableSizes}" class="relative cursor-pointer">
+                                    <input type="radio" name="sizeId" th:value="${size.id}"
+                                           th:checked="${size.sizeCode.name() == 'M'}"
+                                           class="peer sr-only">
+                                    <div class="border-2 border-gray-200 rounded-xl p-4 text-center peer-checked:border-dodo-orange peer-checked:bg-orange-50 transition">
+                                        <span th:text="${size.sizeCode}" class="text-2xl font-bold text-dodo-dark">M</span>
+                                        <p th:text="${size.diameterCm + ' cm'}" class="text-sm text-gray-500"></p>
+                                        <p class="text-lg font-bold text-dodo-orange mt-2">
+                                            <span th:text="${#numbers.formatDecimal(size.priceEur, 1, 2)}">0.00</span> €
+                                        </p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Extra Ingredients -->
+                        <div th:if="${not #lists.isEmpty(availableExtras)}">
+                            <h3 class="font-semibold text-dodo-dark mb-3">Extra ingrediencie:</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label th:each="extra : ${availableExtras}" class="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer">
+                                    <input type="checkbox" name="extras" th:value="${extra.id}"
+                                           class="w-4 h-4 text-dodo-orange rounded focus:ring-dodo-orange">
+                                    <span th:text="${extra.nameSk}" class="text-sm text-gray-700">Extra</span>
+                                    <span class="text-sm text-dodo-orange font-semibold ml-auto">
+                                        +<span th:text="${#numbers.formatDecimal(extra.extraPriceEur, 1, 2)}">0.00</span> €
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div>
+                            <h3 class="font-semibold text-dodo-dark mb-3">Množstvo:</h3>
+                            <div class="flex items-center space-x-4">
+                                <button type="button" onclick="decrementQty()"
+                                        class="w-10 h-10 bg-gray-200 rounded-lg font-bold text-xl hover:bg-gray-300 transition">-</button>
+                                <input type="number" name="quantity" id="quantity" value="1" min="1" max="10"
+                                       class="w-20 text-center border border-gray-300 rounded-lg py-2">
+                                <button type="button" onclick="incrementQty()"
+                                        class="w-10 h-10 bg-gray-200 rounded-lg font-bold text-xl hover:bg-gray-300 transition">+</button>
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                                class="w-full bg-dodo-orange text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition">
+                            🛒 Pridať do košíka
+                        </button>
+                    </form>
+
+                    <!-- Login prompt for guests -->
+                    <div sec:authorize="!isAuthenticated()" class="mt-6 p-6 bg-gray-50 rounded-xl text-center">
+                        <p class="text-gray-600 mb-4">Pre objednanie sa prosím prihláste</p>
+                        <div class="flex gap-4 justify-center">
+                            <a href="/login" class="bg-dodo-orange text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition">
+                                Prihlásiť sa
+                            </a>
+                            <a href="/register" class="bg-dodo-dark text-white px-6 py-3 rounded-lg font-semibold hover:bg-dodo-blue transition">
+                                Registrácia
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script>
+    function incrementQty() {
+        const input = document.getElementById('quantity');
+        if (parseInt(input.value) < 10) {
+            input.value = parseInt(input.value) + 1;
+        }
+    }
+    function decrementQty() {
+        const input = document.getElementById('quantity');
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    }
+</script>
+
+</body>
+</html>
+

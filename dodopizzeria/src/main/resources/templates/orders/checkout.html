@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Objednávka')}"></head>
+<body class="bg-dodo-light min-h-screen flex flex-col">
+
+<nav th:replace="~{fragments/header :: navbar}"></nav>
+<div th:replace="~{fragments/alerts :: alerts}"></div>
+
+<main class="flex-grow">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-dodo-dark mb-8">📦 Dokončenie objednávky</h1>
+
+        <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
+            <span th:text="${error}"></span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Order Summary -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h2 class="text-xl font-bold text-dodo-dark mb-4">Súhrn objednávky</h2>
+
+                <div class="space-y-4">
+                    <div th:each="item : ${cartItems}" class="flex justify-between items-start pb-4 border-b border-gray-100">
+                        <div>
+                            <h4 th:text="${item.pizzaName}" class="font-semibold text-dodo-dark">Pizza</h4>
+                            <p class="text-sm text-gray-500">
+                                <span th:text="${item.sizeCode}">M</span> (<span th:text="${item.diameterCm}">30</span> cm)
+                                × <span th:text="${item.quantity}">1</span>
+                            </p>
+                            <p th:if="${not #lists.isEmpty(item.extras)}" class="text-xs text-gray-400">
+                                + <span th:each="extra, stat : ${item.extras}">
+                                    <span th:text="${extra.ingredientName}">Extra</span><span th:unless="${stat.last}">, </span>
+                                </span>
+                            </p>
+                        </div>
+                        <span class="font-semibold text-dodo-orange">
+                            <span th:text="${#numbers.formatDecimal(item.totalPrice, 1, 2)}">0.00</span> €
+                        </span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
+                    <span class="text-lg font-bold text-dodo-dark">Celkom:</span>
+                    <span class="text-2xl font-bold text-dodo-orange">
+                        <span th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}">0.00</span> €
+                    </span>
+                </div>
+            </div>
+
+            <!-- Delivery Form -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h2 class="text-xl font-bold text-dodo-dark mb-4">Údaje pre doručenie</h2>
+
+                <form th:action="@{/checkout}" th:object="${checkout}" method="post" class="space-y-4">
+                    <div>
+                        <label for="deliveryAddress" class="block text-sm font-medium text-gray-700 mb-1">
+                            Adresa doručenia *
+                        </label>
+                        <input type="text" id="deliveryAddress" th:field="*{deliveryAddress}"
+                               placeholder="Ulica, číslo domu, mesto, PSČ"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange focus:border-transparent"
+                               th:classappend="${#fields.hasErrors('deliveryAddress')} ? 'border-red-500' : ''">
+                        <p th:if="${#fields.hasErrors('deliveryAddress')}" th:errors="*{deliveryAddress}"
+                           class="text-red-500 text-sm mt-1"></p>
+                    </div>
+
+                    <div>
+                        <label for="customerNote" class="block text-sm font-medium text-gray-700 mb-1">
+                            Poznámka k objednávke (nepovinné)
+                        </label>
+                        <textarea id="customerNote" th:field="*{customerNote}" rows="3"
+                                  placeholder="Napr. zvoniť 2x, bez cibule..."
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dodo-orange focus:border-transparent"></textarea>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit"
+                                class="w-full bg-dodo-orange text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition">
+                            ✓ Potvrdiť objednávku
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-4 text-center">
+                    <a href="/cart" class="text-gray-500 hover:text-dodo-dark transition">&larr; Späť do košíka</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+</html>
+
