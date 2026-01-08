@@ -1,7 +1,7 @@
 package sk.food.dodopizzeria.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,12 +19,19 @@ import sk.food.dodopizzeria.service.OrderService;
 import sk.food.dodopizzeria.service.UserService;
 
 @Controller
-@RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
     private final CartService cartService;
     private final UserService userService;
+
+    @Autowired
+    public OrderController(OrderService orderService, CartService cartService,
+                           UserService userService) {
+        this.orderService = orderService;
+        this.cartService = cartService;
+        this.userService = userService;
+    }
 
     @GetMapping("/checkout")
     public String checkoutPage(

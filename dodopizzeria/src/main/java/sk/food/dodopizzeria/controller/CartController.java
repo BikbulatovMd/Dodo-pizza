@@ -1,6 +1,6 @@
 package sk.food.dodopizzeria.controller;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +12,16 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/cart")
-@RequiredArgsConstructor
 public class CartController {
 
     private final CartService cartService;
     private final IngredientService ingredientService;
+
+    @Autowired
+    public CartController(CartService cartService, IngredientService ingredientService) {
+        this.cartService = cartService;
+        this.ingredientService = ingredientService;
+    }
 
     @GetMapping
     public String viewCart(Model model) {

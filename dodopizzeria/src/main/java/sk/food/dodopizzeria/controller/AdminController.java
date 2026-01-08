@@ -1,7 +1,7 @@
 package sk.food.dodopizzeria.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,6 @@ import sk.food.dodopizzeria.service.*;
 
 @Controller
 @RequestMapping("/admin")
-@RequiredArgsConstructor
 public class AdminController {
 
     private final PizzaService pizzaService;
@@ -27,6 +26,18 @@ public class AdminController {
     private final UserService userService;
     private final OrderService orderService;
     private final FileStorageService fileStorageService;
+
+    @Autowired
+    public AdminController(PizzaService pizzaService, IngredientService ingredientService,
+                           TagService tagService, UserService userService,
+                           OrderService orderService, FileStorageService fileStorageService) {
+        this.pizzaService = pizzaService;
+        this.ingredientService = ingredientService;
+        this.tagService = tagService;
+        this.userService = userService;
+        this.orderService = orderService;
+        this.fileStorageService = fileStorageService;
+    }
 
     // Dashboard
     @GetMapping

@@ -1,7 +1,7 @@
 package sk.food.dodopizzeria.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,11 +19,16 @@ import sk.food.dodopizzeria.service.UserService;
 
 @Controller
 @RequestMapping("/profile")
-@RequiredArgsConstructor
 public class ProfileController {
 
     private final UserService userService;
     private final FileStorageService fileStorageService;
+
+    @Autowired
+    public ProfileController(UserService userService, FileStorageService fileStorageService) {
+        this.userService = userService;
+        this.fileStorageService = fileStorageService;
+    }
 
     @GetMapping
     public String viewProfile(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {

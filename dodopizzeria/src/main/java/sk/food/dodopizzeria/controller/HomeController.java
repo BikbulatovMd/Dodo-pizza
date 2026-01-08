@@ -1,6 +1,6 @@
 package sk.food.dodopizzeria.controller;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,12 +15,19 @@ import sk.food.dodopizzeria.service.PizzaService;
 import sk.food.dodopizzeria.service.TagService;
 
 @Controller
-@RequiredArgsConstructor
 public class HomeController {
 
     private final PizzaService pizzaService;
     private final TagService tagService;
     private final IngredientService ingredientService;
+
+    @Autowired
+    public HomeController(PizzaService pizzaService, TagService tagService,
+                          IngredientService ingredientService) {
+        this.pizzaService = pizzaService;
+        this.tagService = tagService;
+        this.ingredientService = ingredientService;
+    }
 
     @GetMapping("/")
     public String home(Model model) {

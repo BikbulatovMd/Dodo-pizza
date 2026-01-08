@@ -1,6 +1,6 @@
 package sk.food.dodopizzeria.controller;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -8,10 +8,14 @@ import sk.food.dodopizzeria.config.CustomUserDetails;
 import sk.food.dodopizzeria.service.CartService;
 
 @ControllerAdvice
-@RequiredArgsConstructor
 public class GlobalControllerAdvice {
 
     private final CartService cartService;
+
+    @Autowired
+    public GlobalControllerAdvice(CartService cartService) {
+        this.cartService = cartService;
+    }
 
     @ModelAttribute("cartItemCount")
     public int cartItemCount() {
