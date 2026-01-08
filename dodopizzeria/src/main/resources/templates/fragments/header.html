@@ -40,7 +40,6 @@
           <span class="text-white font-bold text-xl">Dodo Pizzeria</span>
         </a>
 
-        <!-- Navigation Links -->
         <div class="hidden md:flex items-center space-x-8">
           <a href="/" class="text-white hover:text-dodo-orange transition">Domov</a>
           <a href="/menu" class="text-white hover:text-dodo-orange transition">Menu</a>
@@ -51,7 +50,7 @@
             >
           </div>
 
-          <div sec:authorize="hasRole('COOK')">
+          <div sec:authorize="hasRole('KITCHEN')">
             <a href="/kitchen" class="text-dodo-orange hover:text-white transition font-semibold"
               >Kuchyňa</a
             >
