@@ -1,6 +1,5 @@
 package sk.food.dodopizzeria.config;
 
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +8,6 @@ import sk.food.dodopizzeria.entity.User;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@Getter
 public class CustomUserDetails implements UserDetails {
 
     private final Long id;
@@ -20,6 +18,26 @@ public class CustomUserDetails implements UserDetails {
     private final String profileImageUrl;
     private final boolean enabled;
     private final Collection<? extends GrantedAuthority> authorities;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
 
     public CustomUserDetails(User user) {
         this.id = user.getId();

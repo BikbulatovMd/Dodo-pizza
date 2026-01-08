@@ -1,6 +1,6 @@
 package sk.food.dodopizzeria.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 import sk.food.dodopizzeria.dto.CartItemDto;
@@ -14,12 +14,17 @@ import java.util.*;
 
 @Service
 @SessionScope
-@RequiredArgsConstructor
 public class CartService implements Serializable {
 
     private final Map<String, CartItemDto> items = new LinkedHashMap<>();
     private final PizzaService pizzaService;
     private final IngredientService ingredientService;
+
+    @Autowired
+    public CartService(PizzaService pizzaService, IngredientService ingredientService) {
+        this.pizzaService = pizzaService;
+        this.ingredientService = ingredientService;
+    }
 
     public void addItem(Long pizzaId, Long sizeId, Integer quantity, List<Long> extraIngredientIds) {
         Pizza pizza = pizzaService.findById(pizzaId);

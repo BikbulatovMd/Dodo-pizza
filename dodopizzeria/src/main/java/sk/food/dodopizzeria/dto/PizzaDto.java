@@ -1,12 +1,12 @@
 package sk.food.dodopizzeria.dto;
 
-import jakarta.validation.constraints.*;
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 public class PizzaDto {
 
     private Long id;
@@ -30,5 +30,71 @@ public class PizzaDto {
     private Set<Long> ingredientIds = new HashSet<>();
 
     private Set<Long> tagIds = new HashSet<>();
-}
 
+    public PizzaDto() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNameSk() {
+        return nameSk;
+    }
+
+    public void setNameSk(String nameSk) {
+        this.nameSk = nameSk;
+    }
+
+    public String getDescriptionSk() {
+        return descriptionSk;
+    }
+
+    public void setDescriptionSk(String descriptionSk) {
+        this.descriptionSk = descriptionSk;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Set<Long> getIngredientIds() {
+        return ingredientIds;
+    }
+
+    public void setIngredientIds(Set<Long> ingredientIds) {
+        this.ingredientIds = ingredientIds;
+    }
+
+    public Set<Long> getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(Set<Long> tagIds) {
+        this.tagIds = tagIds;
+    }
+}

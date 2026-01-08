@@ -124,7 +124,7 @@ CREATE TABLE orders (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL,
   order_number VARCHAR(30) NOT NULL UNIQUE,
-  status ENUM('pending','preparing','ready','delivering','delivered','cancelled') NOT NULL DEFAULT 'pending',
+  status ENUM('PENDING','PREPARING','READY','DELIVERING','DELIVERED','CANCELLED') NOT NULL DEFAULT 'PENDING',
   delivery_address VARCHAR(255) NOT NULL,
   customer_note VARCHAR(800),
   total_price_eur DECIMAL(10,2) NOT NULL DEFAULT 0.00,

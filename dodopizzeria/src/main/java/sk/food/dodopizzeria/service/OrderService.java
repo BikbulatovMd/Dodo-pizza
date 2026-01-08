@@ -1,6 +1,6 @@
 package sk.food.dodopizzeria.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,13 +20,21 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-@RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final PizzaSizeRepository pizzaSizeRepository;
     private final IngredientRepository ingredientRepository;
     private final CartService cartService;
+
+    @Autowired
+    public OrderService(OrderRepository orderRepository, PizzaSizeRepository pizzaSizeRepository,
+                        IngredientRepository ingredientRepository, CartService cartService) {
+        this.orderRepository = orderRepository;
+        this.pizzaSizeRepository = pizzaSizeRepository;
+        this.ingredientRepository = ingredientRepository;
+        this.cartService = cartService;
+    }
 
     @Transactional
     public Order createOrder(User user, CheckoutDto checkoutDto) {

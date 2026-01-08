@@ -1,6 +1,6 @@
 package sk.food.dodopizzeria.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,10 +13,14 @@ import sk.food.dodopizzeria.repository.IngredientRepository;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class IngredientService {
 
     private final IngredientRepository ingredientRepository;
+
+    @Autowired
+    public IngredientService(IngredientRepository ingredientRepository) {
+        this.ingredientRepository = ingredientRepository;
+    }
 
     public List<Ingredient> findAll() {
         return ingredientRepository.findAll();

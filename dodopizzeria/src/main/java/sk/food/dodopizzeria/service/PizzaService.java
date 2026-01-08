@@ -1,6 +1,6 @@
 package sk.food.dodopizzeria.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,13 +22,21 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
 public class PizzaService {
 
     private final PizzaRepository pizzaRepository;
     private final PizzaSizeRepository pizzaSizeRepository;
     private final IngredientRepository ingredientRepository;
     private final TagRepository tagRepository;
+
+    @Autowired
+    public PizzaService(PizzaRepository pizzaRepository, PizzaSizeRepository pizzaSizeRepository,
+                        IngredientRepository ingredientRepository, TagRepository tagRepository) {
+        this.pizzaRepository = pizzaRepository;
+        this.pizzaSizeRepository = pizzaSizeRepository;
+        this.ingredientRepository = ingredientRepository;
+        this.tagRepository = tagRepository;
+    }
 
     public Page<Pizza> findAllActive(Pageable pageable) {
         return pizzaRepository.findByActiveTrue(pageable);

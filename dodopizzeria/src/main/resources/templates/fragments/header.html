@@ -100,7 +100,7 @@
 
           <!-- User Menu -->
           <div sec:authorize="isAuthenticated()" class="relative group">
-            <button class="flex items-center space-x-2 text-white">
+            <button class="flex items-center space-x-2 text-white cursor-pointer">
               <img
                 th:if="${currentUser?.profileImageUrl}"
                 th:src="${currentUser.profileImageUrl}"
@@ -115,23 +115,24 @@
               >
               <span th:text="${currentUser?.firstName}" class="hidden md:inline">Používateľ</span>
             </button>
-            <div
-              class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block"
-            >
-              <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >Môj profil</a
-              >
-              <a href="/orders" class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                >Moje objednávky</a
-              >
-              <form th:action="@{/logout}" method="post" class="m-0">
-                <button
-                  type="submit"
-                  class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+            <!-- Dropdown wrapper with padding to bridge hover gap -->
+            <div class="absolute right-0 top-full pt-2 hidden group-hover:block">
+              <div class="w-48 bg-white rounded-md shadow-lg py-1">
+                <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >Môj profil</a
                 >
-                  Odhlásiť sa
-                </button>
-              </form>
+                <a href="/orders" class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >Moje objednávky</a
+                >
+                <form th:action="@{/logout}" method="post" class="m-0">
+                  <button
+                    type="submit"
+                    class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Odhlásiť sa
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
 

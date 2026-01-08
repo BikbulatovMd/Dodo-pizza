@@ -1,6 +1,6 @@
 package sk.food.dodopizzeria.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sk.food.dodopizzeria.entity.Tag;
@@ -10,10 +10,14 @@ import sk.food.dodopizzeria.repository.TagRepository;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class TagService {
 
     private final TagRepository tagRepository;
+
+    @Autowired
+    public TagService(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
+    }
 
     public List<Tag> findAll() {
         return tagRepository.findAll();
