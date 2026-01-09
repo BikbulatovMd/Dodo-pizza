@@ -165,3 +165,5 @@ CREATE INDEX idx_orders_status ON orders(status);
 CREATE INDEX idx_orders_user ON orders(user_id);
 CREATE INDEX idx_pizza_sizes_pizza ON pizza_sizes(pizza_id);
 CREATE INDEX idx_extras_item ON order_item_extras(order_item_id);
+
+
