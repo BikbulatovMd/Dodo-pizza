@@ -104,7 +104,6 @@ public class OrderController {
 
         Order order = orderService.findById(id);
 
-        // Check if order belongs to user (or user is admin)
         if (!order.getUser().getId().equals(userDetails.getId())) {
             return "redirect:/error/403";
         }
@@ -112,5 +111,24 @@ public class OrderController {
         model.addAttribute("order", order);
         return "orders/detail";
     }
+    @PostMapping("/orders/{id}/cancel")
+    public String cancelOrder(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            orderService.cancelOrderByCustomer(id, userDetails.getId());
+            redirectAttributes.addFlashAttribute("success", "Objednávka bola zrušená.");
+        } catch (IllegalStateException ex) {
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        } catch (org.springframework.security.access.AccessDeniedException ex) {
+            redirectAttributes.addFlashAttribute("error", "Access Denied");
+        }
+        return "redirect:/orders";
+    }
+
 }
+
+
 

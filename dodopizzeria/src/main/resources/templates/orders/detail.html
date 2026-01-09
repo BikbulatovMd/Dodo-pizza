@@ -7,7 +7,6 @@
 
     <main class="flex-grow">
       <div class="max-w-4xl mx-auto px-4 py-8">
-        <!-- Header -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
             <a href="/orders" class="text-dodo-orange hover:underline mb-2 inline-block"
@@ -58,7 +57,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Order Items -->
           <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6">
             <h2 class="text-xl font-bold text-dodo-dark mb-4">Položky objednávky</h2>
 
@@ -104,7 +102,6 @@
             </div>
           </div>
 
-          <!-- Order Info -->
           <div class="space-y-6">
             <div class="bg-white rounded-2xl shadow-lg p-6">
               <h2 class="text-lg font-bold text-dodo-dark mb-4">Informácie</h2>
@@ -126,10 +123,26 @@
                   <span class="text-gray-500">Poznámka:</span>
                   <p class="font-medium" th:text="${order.customerNote}">Poznámka</p>
                 </div>
+                <div th:if="${order.status.name() == 'PENDING'}" class="pt-3">
+                  <form th:action="@{/orders/{id}/cancel(id=${order.id})}"
+                        method="post"
+                        onsubmit="return confirm('Naozaj chcete zrušiť objednávku?');">
+
+                    <input type="hidden"
+                           th:if="${_csrf != null}"
+                           th:name="${_csrf.parameterName}"
+                           th:value="${_csrf.token}" />
+
+                    <button type="submit"
+                            class="w-full bg-red-500 text-white py-2 rounded-lg font-medium hover:bg-red-600 transition">
+                      Zrušiť objednávku
+                    </button>
+                  </form>
+                </div>
+
               </div>
             </div>
 
-            <!-- Status Timeline (simplified) -->
             <div class="bg-white rounded-2xl shadow-lg p-6">
               <h2 class="text-lg font-bold text-dodo-dark mb-4">Stav objednávky</h2>
               <div class="space-y-3">

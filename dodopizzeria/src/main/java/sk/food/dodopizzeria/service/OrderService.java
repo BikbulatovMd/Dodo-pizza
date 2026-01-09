@@ -83,7 +83,6 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        // Clear the cart after successful order
         cartService.clear();
 
         return savedOrder;
@@ -127,7 +126,6 @@ public class OrderService {
     }
 
     private void validateStatusTransition(OrderStatus current, OrderStatus next) {
-        // Define valid transitions
         boolean valid = switch (current) {
             case PENDING -> next == OrderStatus.PREPARING || next == OrderStatus.CANCELLED;
             case PREPARING -> next == OrderStatus.READY || next == OrderStatus.CANCELLED;
@@ -141,6 +139,21 @@ public class OrderService {
                     " na " + next.getDisplayNameSk());
         }
     }
+
+    @Transactional
+    public void cancelOrderByCustomer(Long orderId, Long userId) {
+        Order order = findById(orderId);
+
+        if (order.getUser() == null || !order.getUser().getId().equals(userId)) {
+            throw new org.springframework.security.access.AccessDeniedException("Access Denied");
+        }
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new IllegalStateException("Objednávku je možné zrušiť iba v stave Čakajúca");
+        }
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+    }
+
 
     public long countByStatus(OrderStatus status) {
         return orderRepository.countByStatus(status);
