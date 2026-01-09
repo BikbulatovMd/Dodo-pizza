@@ -2,6 +2,7 @@ package sk.food.dodopizzeria.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserProfileDto {
@@ -21,6 +22,10 @@ public class UserProfileDto {
     private String lastName;
 
     @Size(max = 30, message = "Telefón môže mať maximálne 30 znakov")
+    @Pattern(
+            regexp = "^$|^\\+421\\d{9}$",
+            message = "Telefón musí byť vo formáte +421XXXXXXXXX"
+    )
     private String phone;
 
     @Size(max = 255, message = "Adresa môže mať maximálne 255 znakov")

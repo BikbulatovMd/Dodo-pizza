@@ -29,6 +29,10 @@ public class UserRegistrationDto {
     private String lastName;
 
     @Size(max = 30, message = "Telefón môže mať maximálne 30 znakov")
+    @Pattern(
+            regexp = "^$|^\\+421\\d{9}$",
+            message = "Telefón musí byť vo formáte +421XXXXXXXXX"
+    )
     private String phone;
 
     @Size(max = 255, message = "Adresa môže mať maximálne 255 znakov")
