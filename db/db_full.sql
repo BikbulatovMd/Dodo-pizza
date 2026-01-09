@@ -197,10 +197,10 @@ INSERT INTO roles (name, display_name_sk) VALUES
 
 -- Používatelia (heslá sú dočasné hodnoty, v aplikácii sa budú ukladať ako hash)
 INSERT INTO users (email, password_hash, first_name, last_name, phone, delivery_address, profile_image_url, enabled) VALUES
-('zakaznik@test.sk', 'temp', 'Peter', 'Novák', '+421900111222', 'Nitra, Štúrova 10', '/img/profiles/user1.jpg', TRUE),
-('kuchar@test.sk', 'temp', 'Marek', 'Kováč', '+421900333444', 'Nitra, Mostná 5', '/img/profiles/user2.jpg', TRUE),
-('kurier@test.sk', 'temp', 'Ján', 'Horváth', '+421900555666', 'Nitra, Chrenová 2', '/img/profiles/user3.jpg', TRUE),
-('admin@test.sk', 'temp', 'Eva', 'Šimeková', '+421900777888', 'Nitra, Centrum 1', '/img/profiles/user4.jpg', TRUE);
+('zakaznik@test.sk', '$2a$10$NqFCKlpLu.kX8WtMt7ruPOEP/bSEeIsVCD00RwgCjoY2nPkBpQP0.', 'Peter', 'Novák', '+421900111222', 'Nitra, Štúrova 10', '/img/profiles/user1.jpg', TRUE),
+('kuchar@test.sk', '$2a$10$NqFCKlpLu.kX8WtMt7ruPOEP/bSEeIsVCD00RwgCjoY2nPkBpQP0.', 'Marek', 'Kováč', '+421900333444', 'Nitra, Mostná 5', '/img/profiles/user2.jpg', TRUE),
+('kurier@test.sk', '$2a$10$NqFCKlpLu.kX8WtMt7ruPOEP/bSEeIsVCD00RwgCjoY2nPkBpQP0.', 'Ján', 'Horváth', '+421900555666', 'Nitra, Chrenová 2', '/img/profiles/user3.jpg', TRUE),
+('admin@test.sk', '$2a$10$NqFCKlpLu.kX8WtMt7ruPOEP/bSEeIsVCD00RwgCjoY2nPkBpQP0.', 'Eva', 'Šimeková', '+421900777888', 'Nitra, Centrum 1', '/img/profiles/user4.jpg', TRUE);
 
 -- Priradenie rolí používateľom
 INSERT INTO user_roles (user_id, role_id)
@@ -266,7 +266,6 @@ INSERT INTO pizzas (id, name_sk, description_sk, slug, image_url, active, create
 (9,  'Tuniaková','Paradajkový základ, mozzarella, tuniak, cibuľa.','tuniakova','/uploads/pizzas/carbonara-pizza.webp',1, NOW(), NOW()),
 (10, 'Kuracia BBQ','BBQ základ, mozzarella, kuracie mäso, cibuľa.','kuracia-bbq','/uploads/pizzas/funghi-al-panna.webp',1, NOW(), NOW());
 
--- Veľkosti pre každú pizzu (S/M/L)
 INSERT INTO pizza_sizes (pizza_id, size_code, diameter_cm, price_eur, available)
 SELECT p.id, 'S', 25,
   CASE p.slug

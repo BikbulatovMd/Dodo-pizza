@@ -24,10 +24,10 @@ INSERT INTO roles (name, display_name_sk) VALUES
 
 -- Používatelia (heslá sú dočasné hodnoty, v aplikácii sa budú ukladať ako hash)
 INSERT INTO users (email, password_hash, first_name, last_name, phone, delivery_address, profile_image_url, enabled) VALUES
-('zakaznik@test.sk', 'temp', 'Peter', 'Novák', '+421900111222', 'Nitra, Štúrova 10', '/img/profiles/user1.jpg', TRUE),
-('kuchar@test.sk', 'temp', 'Marek', 'Kováč', '+421900333444', 'Nitra, Mostná 5', '/img/profiles/user2.jpg', TRUE),
-('kurier@test.sk', 'temp', 'Ján', 'Horváth', '+421900555666', 'Nitra, Chrenová 2', '/img/profiles/user3.jpg', TRUE),
-('admin@test.sk', 'temp', 'Eva', 'Šimeková', '+421900777888', 'Nitra, Centrum 1', '/img/profiles/user4.jpg', TRUE);
+('zakaznik@test.sk', '$2a$10$NqFCKlpLu.kX8WtMt7ruPOEP/bSEeIsVCD00RwgCjoY2nPkBpQP0.', 'Peter', 'Novák', '+421900111222', 'Nitra, Štúrova 10', '/img/profiles/user1.jpg', TRUE),
+('kuchar@test.sk', '$2a$10$NqFCKlpLu.kX8WtMt7ruPOEP/bSEeIsVCD00RwgCjoY2nPkBpQP0.', 'Marek', 'Kováč', '+421900333444', 'Nitra, Mostná 5', '/img/profiles/user2.jpg', TRUE),
+('kurier@test.sk', '$2a$10$NqFCKlpLu.kX8WtMt7ruPOEP/bSEeIsVCD00RwgCjoY2nPkBpQP0.', 'Ján', 'Horváth', '+421900555666', 'Nitra, Chrenová 2', '/img/profiles/user3.jpg', TRUE),
+('admin@test.sk', '$2a$10$NqFCKlpLu.kX8WtMt7ruPOEP/bSEeIsVCD00RwgCjoY2nPkBpQP0.', 'Eva', 'Šimeková', '+421900777888', 'Nitra, Centrum 1', '/img/profiles/user4.jpg', TRUE);
 
 -- Priradenie rolí používateľom
 INSERT INTO user_roles (user_id, role_id)
@@ -80,19 +80,17 @@ INSERT INTO ingredients (name_sk, allergen_info_sk, vegan, spicy, extra_price_eu
 ('Ananás', NULL, TRUE, FALSE, 1.00),
 ('Rukola', NULL, TRUE, FALSE, 1.00);
 
--- Pizze (10 ks)
-INSERT INTO pizzas (name_sk, description_sk, slug, image_url, active) VALUES
-('Margherita', 'Paradajkový základ, mozzarella, bazalka.', 'margherita', '/img/pizzas/margherita.jpg', TRUE),
-('Šunková', 'Paradajkový základ, mozzarella, šunka.', 'sunkova', '/img/pizzas/sunkova.jpg', TRUE),
-('Salámová', 'Paradajkový základ, mozzarella, saláma.', 'salamova', '/img/pizzas/salamova.jpg', TRUE),
-('Hawai', 'Paradajkový základ, mozzarella, šunka, ananás.', 'hawai', '/img/pizzas/hawai.jpg', TRUE),
-('Quattro Formaggi', 'Mozzarella, parmezán a ďalšie syry.', 'quattro-formaggi', '/img/pizzas/quattro-formaggi.jpg', TRUE),
-('Funghi', 'Paradajkový základ, mozzarella, šampiňóny.', 'funghi', '/img/pizzas/funghi.jpg', TRUE),
-('Vegetariánska', 'Zelenina, mozzarella, olivy.', 'vegetarianska', '/img/pizzas/vegetarianska.jpg', TRUE),
-('Diavola', 'Pikantná saláma, jalapeño, mozzarella.', 'diavola', '/img/pizzas/diavola.jpg', TRUE),
-('Tuniaková', 'Paradajkový základ, mozzarella, tuniak, cibuľa.', 'tuniakova', '/img/pizzas/tuniakova.jpg', TRUE),
-('Kuracia BBQ', 'BBQ základ, mozzarella, kuracie mäso, cibuľa.', 'kuracia-bbq', '/img/pizzas/kuracia-bbq.jpg', TRUE);
-
+INSERT INTO pizzas (id, name_sk, description_sk, slug, image_url, active, created_at, updated_at) VALUES
+(1,  'Margherita','Paradajkový základ, mozzarella, bazalka.','margherita','/uploads/pizzas/margherita-classica.webp',1, NOW(), NOW()),
+(2,  'Šunková','Paradajkový základ, mozzarella, šunka.','sunkova','/uploads/pizzas/capricciosa.webp',1, NOW(), NOW()),
+(3,  'Salámová','Paradajkový základ, mozzarella, saláma.','salamova','/uploads/pizzas/delicatezza-rustica.webp',1, NOW(), NOW()),
+(4,  'Hawai','Paradajkový základ, mozzarella, šunka, ananás.','hawai','/uploads/pizzas/hawaii-classic.webp',1, NOW(), NOW()),
+(5,  'Quattro Formaggi', 'Mozzarella, parmezán a ďalšie syry.','quattro-formaggi', '/uploads/pizzas/la-crema-bianca.webp',1, NOW(), NOW()),
+(6,  'Funghi','Paradajkový základ, mozzarella, šampiňóny.','funghi','/uploads/pizzas/funghi.webp',1, NOW(), NOW()),
+(7,  'Vegetariánska','Zelenina, mozzarella, olivy.','vegetarianska','/uploads/pizzas/gluten-free-primavera.webp',1, NOW(), NOW()),
+(8,  'Diavola','Pikantná saláma, jalapeño, mozzarella.','diavola','/uploads/pizzas/diavola-piccante.webp',1, NOW(), NOW()),
+(9,  'Tuniaková','Paradajkový základ, mozzarella, tuniak, cibuľa.','tuniakova','/uploads/pizzas/carbonara-pizza.webp',1, NOW(), NOW()),
+(10, 'Kuracia BBQ','BBQ základ, mozzarella, kuracie mäso, cibuľa.','kuracia-bbq','/uploads/pizzas/funghi-al-panna.webp',1, NOW(), NOW());
 -- Veľkosti pre každú pizzu (S/M/L)
 INSERT INTO pizza_sizes (pizza_id, size_code, diameter_cm, price_eur, available)
 SELECT p.id, 'S', 25,
