@@ -34,17 +34,17 @@
   <nav th:fragment="navbar" class="bg-dodo-dark shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex justify-between items-center h-16">
-        <!-- Logo -->
-        <a href="/" class="flex items-center space-x-2">
+        <a sec:authorize="!hasAnyRole('KITCHEN','ADMIN','COURIER')" href="/" class="flex items-center space-x-2">
           <span class="text-3xl">🍕</span>
           <span class="text-white font-bold text-xl">Dodo Pizzeria</span>
         </a>
 
-        <div class="hidden md:flex items-center space-x-8">
+        <div  class="hidden md:flex items-center space-x-8">
+          <div sec:authorize="!hasAnyRole('KITCHEN','ADMIN','COURIER')">
           <a href="/" class="text-white hover:text-dodo-orange transition">Domov</a>
           <a href="/menu" class="text-white hover:text-dodo-orange transition">Menu</a>
-
-          <div sec:authorize="isAuthenticated()">
+          </div>
+          <div sec:authorize="hasRole('CUSTOMER')">
             <a href="/orders" class="text-white hover:text-dodo-orange transition"
               >Moje objednávky</a
             >
@@ -69,9 +69,7 @@
           </div>
         </div>
 
-        <!-- Right side -->
         <div class="flex items-center space-x-4">
-          <!-- Cart -->
           <div sec:authorize="isAuthenticated()">
             <a href="/cart" class="relative text-white hover:text-dodo-orange transition">
               <svg
@@ -97,7 +95,6 @@
             </a>
           </div>
 
-          <!-- User Menu -->
           <div sec:authorize="isAuthenticated()" class="relative group">
             <button class="flex items-center space-x-2 text-white cursor-pointer">
               <img
@@ -114,7 +111,6 @@
               >
               <span th:text="${currentUser?.firstName}" class="hidden md:inline">Používateľ</span>
             </button>
-            <!-- Dropdown wrapper with padding to bridge hover gap -->
             <div class="absolute right-0 top-full pt-2 hidden group-hover:block">
               <div class="w-48 bg-white rounded-md shadow-lg py-1">
                 <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
@@ -135,7 +131,6 @@
             </div>
           </div>
 
-          <!-- Login/Register -->
           <div sec:authorize="!isAuthenticated()" class="flex items-center space-x-2">
             <a href="/login" class="text-white hover:text-dodo-orange transition">Prihlásiť sa</a>
             <a
