@@ -31,7 +31,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        // Show featured pizzas on homepage
         model.addAttribute("featuredPizzas", pizzaService.findAllActive()
                 .stream().limit(6).toList());
         model.addAttribute("tags", tagService.findAll());
@@ -45,6 +44,12 @@ public class HomeController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "9") int size,
             Model model) {
+        if (search != null && search.isBlank()) {
+            search = null;
+        }
+        if (tag != null && tag.isBlank()) {
+            tag = null;
+        }
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Pizza> pizzas = pizzaService.searchPizzas(search, tag, pageable);
