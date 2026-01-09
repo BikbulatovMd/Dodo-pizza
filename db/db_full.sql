@@ -255,17 +255,16 @@ INSERT INTO ingredients (name_sk, allergen_info_sk, vegan, spicy, extra_price_eu
 
 
 INSERT INTO pizzas (id, name_sk, description_sk, slug, image_url, active, created_at, updated_at) VALUES
-(1, 'Margherita', 'Paradajkový základ, mozzarella, bazalka.', 'margherita', '/uploads/pizzas/margherita.webp', 1, NOW(), NOW()),
-(2, 'Šunková', 'Paradajkový základ, mozzarella, šunka.', 'sunkova', '/uploads/pizzas/sunkova.webp', 1, NOW(), NOW()),
-(3, 'Salámová', 'Paradajkový základ, mozzarella, saláma.', 'salamova', '/uploads/pizzas/salamova.webp', 1, NOW(), NOW()),
-(4, 'Hawai', 'Paradajkový základ, mozzarella, šunka, ananás.', 'hawai', '/uploads/pizzas/hawai.webp', 1, NOW(), NOW()),
-(5, 'Quattro Formaggi', 'Mozzarella, parmezán a ďalšie syry.', 'quattro-formaggi', '/uploads/pizzas/quattro-formaggi.webp', 1, NOW(), NOW()),
-(6, 'Funghi', 'Paradajkový základ, mozzarella, šampiňóny.', 'funghi', '/uploads/pizzas/funghi.webp', 1, NOW(), NOW()),
-(7, 'Vegetariánska', 'Zelenina, mozzarella, olivy.', 'vegetarianska', '/uploads/pizzas/vegetarianska.webp', 1, NOW(), NOW()),
-(8, 'Diavola', 'Pikantná saláma, jalapeño, mozzarella.', 'diavola', '/uploads/pizzas/diavola.webp', 1, NOW(), NOW()),
-(9, 'Tuniaková', 'Paradajkový základ, mozzarella, tuniak, cibuľa.', 'tuniakova', '/uploads/pizzas/tuniakova.webp', 1, NOW(), NOW()),
-(10, 'Kuracia BBQ', 'BBQ základ, mozzarella, kuracie mäso, cibuľa.', 'kuracia-bbq', '/uploads/pizzas/kuracia-bbq.webp', 1, NOW(), NOW());
-
+(1,  'Margherita','Paradajkový základ, mozzarella, bazalka.','margherita','/uploads/pizzas/margherita-classica.webp',1, NOW(), NOW()),
+(2,  'Šunková','Paradajkový základ, mozzarella, šunka.','sunkova','/uploads/pizzas/capricciosa.webp',1, NOW(), NOW()),
+(3,  'Salámová','Paradajkový základ, mozzarella, saláma.','salamova','/uploads/pizzas/delicatezza-rustica.webp',1, NOW(), NOW()),
+(4,  'Hawai','Paradajkový základ, mozzarella, šunka, ananás.','hawai','/uploads/pizzas/hawaii-classic.webp',1, NOW(), NOW()),
+(5,  'Quattro Formaggi', 'Mozzarella, parmezán a ďalšie syry.','quattro-formaggi', '/uploads/pizzas/la-crema-bianca.webp',1, NOW(), NOW()),
+(6,  'Funghi','Paradajkový základ, mozzarella, šampiňóny.','funghi','/uploads/pizzas/funghi.webp',1, NOW(), NOW()),
+(7,  'Vegetariánska','Zelenina, mozzarella, olivy.','vegetarianska','/uploads/pizzas/gluten-free-primavera.webp',1, NOW(), NOW()),
+(8,  'Diavola','Pikantná saláma, jalapeño, mozzarella.','diavola','/uploads/pizzas/diavola-piccante.webp',1, NOW(), NOW()),
+(9,  'Tuniaková','Paradajkový základ, mozzarella, tuniak, cibuľa.','tuniakova','/uploads/pizzas/carbonara-pizza.webp',1, NOW(), NOW()),
+(10, 'Kuracia BBQ','BBQ základ, mozzarella, kuracie mäso, cibuľa.','kuracia-bbq','/uploads/pizzas/funghi-al-panna.webp',1, NOW(), NOW());
 
 -- Veľkosti pre každú pizzu (S/M/L)
 INSERT INTO pizza_sizes (pizza_id, size_code, diameter_cm, price_eur, available)
