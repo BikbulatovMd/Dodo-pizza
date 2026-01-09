@@ -1,5 +1,3 @@
--- Vytvorenie databázy a tabuliek pre projekt Pizzeria (bez dát)
-
 DROP DATABASE IF EXISTS dodo_pizza;
 CREATE DATABASE dodo_pizza
   CHARACTER SET utf8mb4
@@ -7,7 +5,6 @@ CREATE DATABASE dodo_pizza
 
 USE dodo_pizza;
 
--- Roly používateľov
 CREATE TABLE roles (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(50) NOT NULL UNIQUE,
@@ -16,7 +13,6 @@ CREATE TABLE roles (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Používatelia
 CREATE TABLE users (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(120) NOT NULL UNIQUE,
@@ -31,7 +27,6 @@ CREATE TABLE users (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Prepojenie používateľov a rolí (many-to-many)
 CREATE TABLE user_roles (
   user_id BIGINT NOT NULL,
   role_id BIGINT NOT NULL,
@@ -44,7 +39,6 @@ CREATE TABLE user_roles (
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- Pizze v katalógu
 CREATE TABLE pizzas (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name_sk VARCHAR(120) NOT NULL,
@@ -56,7 +50,6 @@ CREATE TABLE pizzas (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Veľkosti pizze (S/M/L) s cenou a priemerom
 CREATE TABLE pizza_sizes (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   pizza_id BIGINT NOT NULL,
@@ -72,7 +65,6 @@ CREATE TABLE pizza_sizes (
     ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- Ingrediencie (aj pre extra prísady)
 CREATE TABLE ingredients (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name_sk VARCHAR(120) NOT NULL UNIQUE,
@@ -84,7 +76,6 @@ CREATE TABLE ingredients (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Tagy pre filtrovanie a označenie
 CREATE TABLE tags (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name_sk VARCHAR(80) NOT NULL UNIQUE,
@@ -93,7 +84,6 @@ CREATE TABLE tags (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Základný recept pizze (many-to-many)
 CREATE TABLE pizza_ingredients (
   pizza_id BIGINT NOT NULL,
   ingredient_id BIGINT NOT NULL,
@@ -106,7 +96,6 @@ CREATE TABLE pizza_ingredients (
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- Prepojenie pizza - tag (many-to-many)
 CREATE TABLE pizza_tags (
   pizza_id BIGINT NOT NULL,
   tag_id BIGINT NOT NULL,
@@ -119,7 +108,7 @@ CREATE TABLE pizza_tags (
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- Objednávky (hlavička)
+
 CREATE TABLE orders (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_id BIGINT NOT NULL,
@@ -135,7 +124,6 @@ CREATE TABLE orders (
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- Položky objednávky (snapshottované údaje pre zachovanie histórie)
 CREATE TABLE order_items (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   order_id BIGINT NOT NULL,
@@ -155,7 +143,6 @@ CREATE TABLE order_items (
     ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- Extra prísady pridané ku konkrétnej položke objednávky
 CREATE TABLE order_item_extras (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   order_item_id BIGINT NOT NULL,
@@ -173,7 +160,6 @@ CREATE TABLE order_item_extras (
     ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- Indexy pre rýchle filtrovanie a vyhľadávanie
 CREATE INDEX idx_pizzas_active ON pizzas(active);
 CREATE INDEX idx_orders_status ON orders(status);
 CREATE INDEX idx_orders_user ON orders(user_id);
